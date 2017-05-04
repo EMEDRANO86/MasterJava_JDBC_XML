@@ -72,8 +72,9 @@ public class Direccion {
 	// Método de prueba de inyecciones
 	@Override
 	public String toString() {
-		return "[Calle: " + calle + "; Número: " + numero + "; Población: " + poblacion + "; CP: " + cp
-				+ "; Provincia: " + provincia + "]";
+		return "Calle: " + calle + "; Número: " + numero + "; Población: " + poblacion + "; CP: " + cp
+				+ "; Provincia: " + provincia
+				+ "\n --------------------------";
 	}
 
 }

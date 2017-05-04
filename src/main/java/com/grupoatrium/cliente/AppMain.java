@@ -3,13 +3,13 @@
  */
 package com.grupoatrium.cliente;
 
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.support.GenericXmlApplicationContext;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.grupoatrium.modelo.Libro;
-import com.grupoatrium.persistencia.impl.ConnectionMgr;
-import com.grupoatrium.persistencia.impl.EditorialesDAO;
-import com.grupoatrium.persistencia.impl.LibrosDAO;
+import com.grupoatrium.negocio.NegocioAutores;
+import com.grupoatrium.negocio.NegocioDirecciones;
+import com.grupoatrium.negocio.NegocioEditoriales;
+import com.grupoatrium.negocio.NegocioLibros;
 
 /**
  * Clase de inicio de la aplicación
@@ -25,29 +25,106 @@ public class AppMain {
 		 * de configuración XML
 		 */
 
-		//Carga de Properties para Producción seleccionar "setActiveProfiles("production")
-		//Carga de Properties para tests:
-		GenericXmlApplicationContext  context = new GenericXmlApplicationContext ();
-		context.getEnvironment().setActiveProfiles("test");
-		context.load("applicationContext-business.xml",
-				"applicationContext-properties.xml", "applicationContext-dao.xml");
-		context.refresh();
+		// Carga de Properties para Producción seleccionar
+		// "setActiveProfiles("production")
+		// Carga de Properties para tests:
+		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-dao.xml");
 
-		// Recuperar del contenedor el bean Libro
-		Libro libro = context.getBean("libro1", Libro.class);
-		ConnectionMgr connection = context.getBean("connectionMgr", ConnectionMgr.class);
-		LibrosDAO librosDAO = context.getBean("librosDAO", LibrosDAO.class);
-		EditorialesDAO editorialesDAO = context.getBean("editorialesDAO", EditorialesDAO.class);
+		NegocioLibros beanNegocio = (NegocioLibros) context.getBean("negocioLibro");
 
-		//Imprimimos las propiedades de todos los beans por pantalla
-		System.out.println("Propiedades de Libro:\n"+libro.toString());
-		System.out.println("Propiedades de ConnectionMgr:\n   "+connection.toString());
-		System.out.println("Propiedades de LibrosDAO:\n   "+librosDAO.toString());
-		System.out.println("Propiedades de EditorialesDAO:\n   "+editorialesDAO.toString());
+		System.out.println("READ");
+		System.out.println("MOSTRAR TODOS LOS LIBROS:");
+		beanNegocio.consultarLibros();
 
-		//Cerramos el contexto de Spring, se ejecutan los métodos PreDestroy y Destroy.
-		((ConfigurableApplicationContext) context).close();
+		System.out.println("MOSTRAR UN LIBRO ESPECÍFICO:");
+		beanNegocio.buscarLibro("9788408163381");
 
+		System.out.println("CREATE");
+		beanNegocio.insertarLibro("1234567891231", "Las bicicletas", "Carlos Aljibes", "Mundo", 2, 19.95, "Novela");
+		System.out.println("LIBROS TRAS INSERCIÓN:");
+		beanNegocio.consultarLibros();
+
+		System.out.println("UPDATE");
+		beanNegocio.actualizarTitulo("9788408163381", "Titulo Modificado");
+		System.out.println("LIBROS TRAS ACTUALIZACIÓN:");
+		beanNegocio.consultarLibros();
+
+		System.out.println("DELETE");
+		beanNegocio.borrarLibro("9788408163381");
+		System.out.println("LIBROS TRAS BORRADO:");
+		beanNegocio.consultarLibros();
+
+		NegocioAutores beanAutor = (NegocioAutores) context.getBean("negocioAutor");
+
+		System.out.println("READ");
+		System.out.println("MOSTRAR AUTORES");
+		beanAutor.consultarAutor();
+
+		System.out.println("MOSTRAR AUTOR ESPECÍFICO:");
+		beanAutor.buscarAutor("Carlos Ruiz Zafon");
+
+		System.out.println("CREATE");
+		beanAutor.insertarAutor("Rafael Perez", "Colombiana", "Especialista en novela negra");
+		System.out.println("AUTORES TRAS INSERCIÓN:");
+		beanAutor.consultarAutor();
+
+		System.out.println("UPDATE");
+		beanAutor.actualizarNacionalidad("Rafael Perez", "Argentina");
+		System.out.println("AUTORES TRAS ACTUALIZACIÓN:");
+		beanAutor.consultarAutor();
+
+		System.out.println("DELETE");
+		beanAutor.borrarAutor("Rafael Perez");
+		System.out.println("AUTORES TRAS BORRADO:");
+		beanAutor.consultarAutor();
+
+		NegocioEditoriales beanEditorial = (NegocioEditoriales) context.getBean("negocioEditorial");
+
+		System.out.println("READ");
+		System.out.println("MOSTRAR EDITORIALES");
+		beanEditorial.consultarEditoriales();
+
+		System.out.println("MOSTRAR EDITORIAL ESPECIFICA:");
+		beanEditorial.buscarEditorial("PLANETA");
+
+		System.out.println("CREATE");
+		beanEditorial.insertarEditorial("EL BOSQUE", "Calle Gran Vía, 23", "34522624A");
+		System.out.println("EDITORIALES TRAS INSERCIÓN:");
+		beanEditorial.consultarEditoriales();
+
+		System.out.println("UPDATE");
+		beanEditorial.actualizarDireccion("EL BOSQUE", "Calle Bolivia, 32");
+		System.out.println("EDITORIALES TRAS ACTUALIZACIÓN:");
+		beanEditorial.consultarEditoriales();
+
+		System.out.println("DELETE");
+		beanEditorial.borrarEditorial("EL BOSQUE");
+		System.out.println("EDITORIALES TRAS BORRADO:");
+		beanEditorial.consultarEditoriales();
+
+		NegocioDirecciones beanDireccion = (NegocioDirecciones) context.getBean("negocioDireccion");
+
+		System.out.println("READ");
+		System.out.println("MOSTRAR DIRECCIONES:");
+		beanDireccion.consultarDirecciones();
+
+		System.out.println("MOSTRAR DIRECCION ESPECÍFICA:");
+		beanDireccion.buscarDireccion("Calle Nueva");
+
+		System.out.println("CREATE");
+		beanDireccion.insertarDireccion("La molina", 45, "Valladolid", 46001, "Valladolid");
+		System.out.println("DIRECCIONES TRAS INSERCIÓN:");
+		beanDireccion.consultarDirecciones();
+
+		System.out.println("UPDATE");
+		beanDireccion.actualizarNumero("La molina", 87);
+		System.out.println("DIRECCIONES TRAS ACTUALIZACIÓN:");
+		beanDireccion.consultarDirecciones();
+
+		System.out.println("DELETE");
+		beanDireccion.borrarDireccion("La molina");
+		System.out.println("DIRECCIONES TRAS BORRADO:");
+		beanDireccion.consultarDirecciones();
 	}
 
 }

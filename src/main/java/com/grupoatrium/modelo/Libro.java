@@ -18,20 +18,11 @@ public class Libro {
 	// Definimos las propiedades de clase
 	private String isbn;
 	private String titulo;
-	private List<Autor> autores;
-	private Editorial editorial;
+	private String autores;
+	private String editorial;
 	private int publicacion;
 	private double precio;
 	private String descripcion;
-
-	// Métodos de Ciclo de Vida
-	public void init() {
-		System.out.println("Metodo Init");
-	}
-
-	public void destroy() {
-		System.out.println("Método Destroy");
-	}
 
 	//--------------Métodos de acceso y modificación-------------
 
@@ -51,19 +42,19 @@ public class Libro {
 		this.titulo = titulo;
 	}
 
-	public List<Autor> getAutores() {
+	public String getAutores() {
 		return autores;
 	}
 
-	public void setAutores(List<Autor> autores) {
+	public void setAutores(String autores) {
 		this.autores = autores;
 	}
 
-	public Editorial getEditorial() {
+	public String getEditorial() {
 		return editorial;
 	}
 
-	public void setEditorial(Editorial editorial) {
+	public void setEditorial(String editorial) {
 		this.editorial = editorial;
 	}
 
@@ -94,9 +85,10 @@ public class Libro {
 	// Método de prueba de inyecciones
 	@Override
 	public String toString() {
-		return "- ISBN: " + isbn + "\n- Titulo: " + titulo + "\n- Autores: "
-				+ autores.stream().map(Object::toString).collect(Collectors.joining(",")) + "\n- Editorial: "
-				+ editorial.toString() + "\n- Publicacion: " + publicacion + "\n- Precio: " + precio;
+		return "- ISBN: " + isbn + "\n- Titulo: " + titulo	+ "\n- Autores: "
+				+ autores + "\n- Editorial: "
+				+ editorial + "\n- Publicacion: " + publicacion + "\n- Precio: " + precio + "\n- Descripción: " + descripcion
+				+ "\n --------------------------";
 	}
 
 }

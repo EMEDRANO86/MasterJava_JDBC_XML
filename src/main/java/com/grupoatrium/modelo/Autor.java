@@ -45,9 +45,10 @@ public class Autor {
 	//Método de prueba de inyecciones
 	@Override
 	public String toString() {
-		return "[Nombre: "+nombre
+		return "Nombre: "+nombre
 				+"; Nacionalidad: "+nacionalidad
-				+"; Comentarios: "+comentarios+"]";
+				+"; Comentarios: "+comentarios
+				+ "\n --------------------------";
 	}
 
 

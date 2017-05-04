@@ -12,11 +12,11 @@ public class Editorial {
 
 	// Definimos las propiedades de clase
 	private String nombre;
-	private Direccion direccion;
+	private String direccion;
 	private String nif;
 
 	// Constructor para definir propiedades de clase
-	public Editorial(String nombre, Direccion direccion, String nif) {
+	public Editorial(String nombre, String direccion, String nif) {
 		this.nombre = nombre;
 		this.direccion = direccion;
 		this.nif = nif;
@@ -33,11 +33,11 @@ public class Editorial {
 	}
 
 
-	public Direccion getDireccion() {
+	public String getDireccion() {
 		return direccion;
 	}
 
-	public void setDireccion(Direccion direccion) {
+	public void setDireccion(String direccion) {
 		this.direccion = direccion;
 	}
 
@@ -52,7 +52,8 @@ public class Editorial {
 	// Método de prueba de inyecciones
 	@Override
 	public String toString() {
-		return "[Nombre: " + nombre + "; Dirección: " + direccion.toString() + "; Nif: " + nif + "]";
+		return "Nombre: " + nombre + "; Dirección: " + direccion + "; Nif: " + nif
+				+ "\n --------------------------";
 	}
 
 }

@@ -1,31 +1,73 @@
-<?xml version="1.0" encoding="UTF-8"?>
+
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans 
-	http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd  
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd        
+                http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd">
 
 	<!-- XML Config para los beans de persistencia -->
 
 	<!-- Inyectamos las propiedades del bean con los datos del archivo de propiedades -->
-	<bean id="connectionMgr" class="com.grupoatrium.persistencia.impl.ConnectionMgr">
-		<property name="driver" value="${driver}" />
+<!-- 	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${driver}" />
 		<property name="url" value="${url}" />
-		<property name="usuario" value="${user}" />
+		<property name="username" value="${user}" />
 		<property name="password" value="${pw}" />
+	</bean> -->
+
+	<jdbc:embedded-database id="dataSource" type="DERBY">
+<!-- 	<jdbc:initialize-database data-source="dataSource">-->		
+		<jdbc:script location="classpath:com/grupoatrium/db/schema.sql" />
+		<jdbc:script location="classpath:com/grupoatrium/db/values.sql" />
+	</jdbc:embedded-database>
+
+	<bean id="mapeadorLibro" class="com.grupoatrium.persistencia.impl.MapeadorLibro" />
+
+	<bean id="libroDAO" class="com.grupoatrium.persistencia.impl.LibrosDAO">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapeadorLibro" ref="mapeadorLibro" />
 	</bean>
 
-	<!-- Creamos Bean Abstracto para ConnectionMgr, con referencia al bean connectionMgr -->
-	<bean id="abstractConnectionMgr" abstract="true">
-		<property name="connectionMgr" ref="connectionMgr" />
+	<bean id="negocioLibro" class="com.grupoatrium.negocio.NegocioLibros">
+		<property name="dao" ref="libroDAO" />
 	</bean>
 
-	<!-- Creamos Bean de LibrosDAO heredando del Bean Abstracto -->
-	<bean id="librosDAO" class="com.grupoatrium.persistencia.impl.LibrosDAO"
-		parent="abstractConnectionMgr" />
+	<bean id="mapeadorAutor" class="com.grupoatrium.persistencia.impl.MapeadorAutor" />
 
-	<!-- Creamos Bean de EditorialesDAO heredando del Bean Abstracto -->
-	<bean id="editorialesDAO" class="com.grupoatrium.persistencia.impl.EditorialesDAO"
-		parent="abstractConnectionMgr" />
+	<bean id="autorDAO" class="com.grupoatrium.persistencia.impl.AutoresDAO">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapeadorAutor" ref="mapeadorAutor" />
+	</bean>
 
+	<bean id="negocioAutor" class="com.grupoatrium.negocio.NegocioAutores">
+		<property name="dao" ref="autorDAO" />
+	</bean>
+	
+	<bean id="mapeadorEditorial" class="com.grupoatrium.persistencia.impl.MapeadorEditorial" />
+
+	<bean id="editorialDAO" class="com.grupoatrium.persistencia.impl.EditorialesDAO">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapeadorEditorial" ref="mapeadorEditorial" />
+	</bean>
+
+	<bean id="negocioEditorial" class="com.grupoatrium.negocio.NegocioEditoriales">
+		<property name="dao" ref="editorialDAO" />
+	</bean>
+
+	<bean id="mapeadorDireccion" class="com.grupoatrium.persistencia.impl.MapeadorDireccion" />
+
+	<bean id="direccionDAO" class="com.grupoatrium.persistencia.impl.DireccionesDAO">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapeadorDireccion" ref="mapeadorDireccion" />
+	</bean>
+
+	<bean id="negocioDireccion" class="com.grupoatrium.negocio.NegocioDirecciones">
+		<property name="dao" ref="direccionDAO" />
+	</bean>
 </beans>
 
