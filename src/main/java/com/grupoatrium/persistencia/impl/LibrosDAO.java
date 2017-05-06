@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,12 +20,13 @@ import com.grupoatrium.modelo.Libro;
  * @author Elena
  *
  */
-public class LibrosDAO extends NamedParameterJdbcDaoSupport {
+public class LibrosDAO {
 
+	private NamedParameterJdbcTemplate plantilla;
 	private RowMapper<Libro> mapeadorLibro;
 
 	public List<Libro> mostrarTodos() {
-		return getNamedParameterJdbcTemplate().query("select * from LIBRO", (Map<String, Object>) null, mapeadorLibro);
+		return plantilla.query("select * from LIBRO", (Map<String, Object>) null, mapeadorLibro);
 	}
 
 	public Libro consultarLibro(String isbn) {
@@ -32,7 +34,7 @@ public class LibrosDAO extends NamedParameterJdbcDaoSupport {
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		parametros.put("codigo", isbn);
 
-		return getNamedParameterJdbcTemplate().queryForObject(sql, parametros, mapeadorLibro);
+		return plantilla.queryForObject(sql, parametros, mapeadorLibro);
 	}
 
 	@Transactional(rollbackFor = SQLException.class, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRED)
@@ -46,7 +48,7 @@ public class LibrosDAO extends NamedParameterJdbcDaoSupport {
 		parametros.put("publicacion", l.getPublicacion());
 		parametros.put("precio", l.getPrecio());
 		parametros.put("descripcion", l.getDescripcion());
-		getNamedParameterJdbcTemplate().update(sql, parametros);
+		plantilla.update(sql, parametros);
 
 		System.out.println("Alta de libro realizada correctamente");
 	}
@@ -57,7 +59,7 @@ public class LibrosDAO extends NamedParameterJdbcDaoSupport {
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		parametros.put("titulo",titulo);
 		parametros.put("isbn",isbn);
-		getNamedParameterJdbcTemplate().update(sql, parametros);
+		plantilla.update(sql, parametros);
 		
 		System.out.println("Registro actualizado");
 	}
@@ -67,7 +69,7 @@ public class LibrosDAO extends NamedParameterJdbcDaoSupport {
 		String sql = "DELETE FROM LIBRO WHERE ISBN = :codigo";
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		parametros.put("codigo",isbn);
-		getNamedParameterJdbcTemplate().update(sql,parametros);
+		plantilla.update(sql,parametros);
 		
 		System.out.println("Registro borrado");
 	}
@@ -86,5 +88,21 @@ public class LibrosDAO extends NamedParameterJdbcDaoSupport {
 	public void setMapeadorLibro(RowMapper<Libro> mapeadorLibro) {
 		this.mapeadorLibro = mapeadorLibro;
 	}
+
+	/**
+	 * @return the plantilla
+	 */
+	public NamedParameterJdbcTemplate getPlantilla() {
+		return plantilla;
+	}
+
+	/**
+	 * @param plantilla the plantilla to set
+	 */
+	public void setPlantilla(NamedParameterJdbcTemplate plantilla) {
+		this.plantilla = plantilla;
+	}
+	
+	
 
 }

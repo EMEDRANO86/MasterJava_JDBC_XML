@@ -9,27 +9,21 @@
                 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd        
                 http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd">
 
-	<!-- XML Config para los beans de persistencia -->
-
-	<!-- Inyectamos las propiedades del bean con los datos del archivo de propiedades -->
-<!-- 	<bean id="dataSource"
-		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="${driver}" />
-		<property name="url" value="${url}" />
-		<property name="username" value="${user}" />
-		<property name="password" value="${pw}" />
-	</bean> -->
 
 	<jdbc:embedded-database id="dataSource" type="DERBY">
-<!-- 	<jdbc:initialize-database data-source="dataSource">-->		
 		<jdbc:script location="classpath:com/grupoatrium/db/schema.sql" />
 		<jdbc:script location="classpath:com/grupoatrium/db/values.sql" />
 	</jdbc:embedded-database>
 
+	<bean id="template"
+		class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+		<constructor-arg ref="dataSource" />
+	</bean>
+
 	<bean id="mapeadorLibro" class="com.grupoatrium.persistencia.impl.MapeadorLibro" />
 
 	<bean id="libroDAO" class="com.grupoatrium.persistencia.impl.LibrosDAO">
-		<property name="dataSource" ref="dataSource" />
+		<property name="plantilla" ref="template" />
 		<property name="mapeadorLibro" ref="mapeadorLibro" />
 	</bean>
 
@@ -40,18 +34,18 @@
 	<bean id="mapeadorAutor" class="com.grupoatrium.persistencia.impl.MapeadorAutor" />
 
 	<bean id="autorDAO" class="com.grupoatrium.persistencia.impl.AutoresDAO">
-		<property name="dataSource" ref="dataSource" />
+		<property name="plantilla" ref="template" />
 		<property name="mapeadorAutor" ref="mapeadorAutor" />
 	</bean>
 
 	<bean id="negocioAutor" class="com.grupoatrium.negocio.NegocioAutores">
 		<property name="dao" ref="autorDAO" />
 	</bean>
-	
+
 	<bean id="mapeadorEditorial" class="com.grupoatrium.persistencia.impl.MapeadorEditorial" />
 
 	<bean id="editorialDAO" class="com.grupoatrium.persistencia.impl.EditorialesDAO">
-		<property name="dataSource" ref="dataSource" />
+		<property name="plantilla" ref="template" />
 		<property name="mapeadorEditorial" ref="mapeadorEditorial" />
 	</bean>
 
@@ -62,7 +56,7 @@
 	<bean id="mapeadorDireccion" class="com.grupoatrium.persistencia.impl.MapeadorDireccion" />
 
 	<bean id="direccionDAO" class="com.grupoatrium.persistencia.impl.DireccionesDAO">
-		<property name="dataSource" ref="dataSource" />
+		<property name="plantilla" ref="template" />
 		<property name="mapeadorDireccion" ref="mapeadorDireccion" />
 	</bean>
 

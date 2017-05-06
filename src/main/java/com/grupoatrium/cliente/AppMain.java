@@ -4,6 +4,7 @@
 package com.grupoatrium.cliente;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.grupoatrium.negocio.NegocioAutores;
@@ -25,13 +26,12 @@ public class AppMain {
 		 * de configuración XML
 		 */
 
-		// Carga de Properties para Producción seleccionar
-		// "setActiveProfiles("production")
-		// Carga de Properties para tests:
 		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-dao.xml");
+		
+		//LIBRO---------------------------------
 
 		NegocioLibros beanNegocio = (NegocioLibros) context.getBean("negocioLibro");
-
+				
 		System.out.println("READ");
 		System.out.println("MOSTRAR TODOS LOS LIBROS:");
 		beanNegocio.consultarLibros();
@@ -54,6 +54,8 @@ public class AppMain {
 		System.out.println("LIBROS TRAS BORRADO:");
 		beanNegocio.consultarLibros();
 
+		//AUTOR---------------------------------
+		
 		NegocioAutores beanAutor = (NegocioAutores) context.getBean("negocioAutor");
 
 		System.out.println("READ");
@@ -78,6 +80,8 @@ public class AppMain {
 		System.out.println("AUTORES TRAS BORRADO:");
 		beanAutor.consultarAutor();
 
+		//EDITORIAL---------------------------------
+		
 		NegocioEditoriales beanEditorial = (NegocioEditoriales) context.getBean("negocioEditorial");
 
 		System.out.println("READ");
@@ -101,6 +105,8 @@ public class AppMain {
 		beanEditorial.borrarEditorial("EL BOSQUE");
 		System.out.println("EDITORIALES TRAS BORRADO:");
 		beanEditorial.consultarEditoriales();
+
+		//DIRECCION---------------------------------
 
 		NegocioDirecciones beanDireccion = (NegocioDirecciones) context.getBean("negocioDireccion");
 
